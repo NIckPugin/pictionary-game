@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pictionary Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pictionary Game</h1>
+        <button id="startButton">Start Game</button>
+        <div id="wordList" class="word-list"></div>
+        <div id="timer" class="timer">Time Left: 60s</div>
+    </div>
+
+    <audio id="alarmSound" src="alarm.wav" preload="auto"></audio>
+
+    <script>
+        const words = [
+            'Robot', 'Android', 'Cyborg', 'Drone', 'Mech', 'Humanoid', 'Exoskeleton', 'Bionic', 
+            'Servo', 'Sensor', 'Actuator', 'Gears', 'Circuit', 'Drone', 'Processor', 'AI', 
+            'Quantum', 'Blockchain', 'Algorithm', 'Firmware', 'Cloud', 'Server', 'Satellite', 
+            'Avatar', 'Turing', 'Factory', 'Automation', 'Neural', 'Virtual', 'Augmented', 'Hologram', 
+            'Laser', 'Rocket', 'Spaceship', 'Mars', 'Rover', 'Arm', 'Battery', 'Monitor', 'Keyboard', 
+            'Mouse', 'Speaker', 'Chip', 'Nanobot', 'Drone', 'Robotdog', 'Exosuit', 'Helmet', 'Bot', 
+            'Headset', 'Camera', 'Robotarm', 'Power', 'Cable', 'Plug', 'Touchscreen', 'Helmet', 
+            'Electrode', '3Dprinter', 'Lens', 'Saturn', 'Robocar', 'Data', 'WiFi', 'Biometrics', 
+            'Drone', 'Charger', 'Code', 'Hacker', 'Robotbrain', 'Sensor', 'Drone', 'Radar', 
+            'Password', 'Encryption', 'Botany', 'Laser', 'Thermostat', 'Factory', 'Robotfoot', 
+            'Brain', 'Cannon', 'Xray', 'Scanner', 'Molecule', 'Neon', 'Wormhole', 'Cosmos', 
+            'Singularity', 'Simulation', 'Energy', 'Magnet', 'Jetpack', 'Satellite', 'Rocket', 
+            'Engine', 'Neuron', 'Virus', 'Tesla', 'Radiation', 'Chappie', 'Robocop', 'Ava', 
+            'Ultron', 'Optimus', 'Terminator', 'Robofoot', 'Spacesuit', 'Wheel', 'Television', 
+            'Controller', 'Robotface', 'Scanner', 'Factory', 'Robotfinger', 'Grid', 'Joystick', 
+            'Launchpad', 'Telescope', 'Universe', 'Printer', 'Solar', 'Cog', 'Watch', 'Dronecam', 
+            'Vacuum', 'Wing', 'Shield', 'Gyroscope', 'Dronewing', 'Hub', 'Robotleg', 'Magneto'
+        ];
+
+        let timer;
+        let timeLeft = 60;
+
+        const startButton = document.getElementById('startButton');
+        const wordList = document.getElementById('wordList');
+        const timerDisplay = document.getElementById('timer');
+        const alarmSound = document.getElementById('alarmSound');
+
+        function getRandomWords() {
+            const shuffled = words.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 5);
+        }
+
+        function startTimer() {
+            timeLeft = 60;
+            timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+                if (timeLeft === 0) {
+                    clearInterval(timer);
+                    alarmSound.play();
+                }
+            }, 1000);
+        }
+
+        function startGame() {
+            clearInterval(timer);  // Clear previous timer
+            const randomWords = getRandomWords();
+            wordList.innerHTML = `<ul>${randomWords.map(word => `<li>${word}</li>`).join('')}</ul>`;
+
+            // Ensure sound is loaded and ready
+            alarmSound.play().then(() => {
+                alarmSound.pause();
+                alarmSound.currentTime = 0;
+            }).catch(error => {
+                console.log('Sound loading error:', error);
+            });
+            
+            startTimer();
+        }
+
+        startButton.addEventListener('click', startGame);
+    </script>
+</body>
+</html>
